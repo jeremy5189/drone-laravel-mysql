@@ -14,7 +14,6 @@ pipeline:
       - cp .env.example .env
       - composer install --prefer-dist --no-dev
       - php artisan key:generate
-      - mysql -u test -ppassword -e 'CREATE DATABASE drone-laravel-mysql; USE drone-laravel-mysql; SELECT 1' -h mysql
       - php artisan migrate
 
 services:
