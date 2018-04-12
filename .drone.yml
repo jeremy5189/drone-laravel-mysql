@@ -1,0 +1,26 @@
+clone:
+  git:
+    image: plugins/git
+    depth: 50
+    recursive: false
+
+pipeline:
+  laravel:
+    image: laradock/workspace:1.8-71
+    group: backend
+    commands:
+      - php -v
+      - composer -V
+      - cp .env.example .env
+      - composer install --prefer-dist --no-dev
+      - php artisan key:generate
+      - mysql -u test -ppassword -e 'CREATE DATABASE drone-laravel-mysql; USE drone-laravel-mysql; SELECT 1' -h mysql
+      - php artisan migrate
+
+services:
+  mysql:
+    image: mysql:5.7.21
+    environment:
+      MYSQL_DATABASE: drone-laravel-mysql
+      MYSQL_USER: test
+      MYSQL_PASSWORD: password
